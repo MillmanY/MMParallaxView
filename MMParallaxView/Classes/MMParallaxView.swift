@@ -122,7 +122,7 @@ public class MMParallaxView: UIView {
             }
         }
     }
-    public lazy var bottomBaseView: UIView = {
+    lazy var bottomBaseView: UIView = {
         let v = UIView()
         v.backgroundColor = UIColor.clear
         return v

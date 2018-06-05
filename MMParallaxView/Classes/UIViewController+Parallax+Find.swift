@@ -6,7 +6,7 @@
 //
 
 import Foundation
-public extension UIViewController {
+extension UIViewController {
     
     public var parallax: MMParallaxView? {
         get {
