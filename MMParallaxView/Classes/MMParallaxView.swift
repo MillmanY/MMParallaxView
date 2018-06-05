@@ -288,15 +288,15 @@ public class MMParallaxView: UIView {
                 self.stop()
             }
         case 0..<Int(convert):
-            let percent = (y/convert).decimalCount(count: 2)
-            if percent > 0.99 {
+            let percent = (y/convert).decimalCount(count: 3)
+            if percent >= 0.99 {
                 if let b = self.bottomGestureView?.isTracking {
                     if !b { self.stop() }
                 } else {
                     self.stop()
                 }
                 self.status = .hide
-            } else if percent < 0.01 {
+            } else if percent <= 0.01 {
                 self.stop()
                 self.status = .show
             } else {
