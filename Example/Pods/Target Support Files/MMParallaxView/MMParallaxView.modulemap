@@ -1,0 +1,6 @@
+framework module MMParallaxView {
+  umbrella header "MMParallaxView-umbrella.h"
+
+  export *
+  module * { export * }
+}
