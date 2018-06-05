@@ -12,6 +12,7 @@ class SecondViewController: MMParallaxViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Demo2"
         self.performSegue(withIdentifier: "MMParallaxTop", sender: nil)
         self.performSegue(withIdentifier: "MMParallaxBottom", sender: nil)
 

@@ -27,6 +27,8 @@ class SimpleViewController: UIViewController {
     @IBOutlet weak var imgView: UIImageView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.title = "Demo1"
+
         tableView.register(UINib.init(nibName: "ImageCell", bundle: nil), forCellReuseIdentifier: "ImageCell")
         tableView.register(UINib.init(nibName: "TitleCell", bundle: nil), forCellReuseIdentifier: "TitleCell")
         parallaxView.heightType = .height(value: 300)

@@ -110,7 +110,7 @@ public class MMParallaxView: UIView {
                     switch status {
                     case .hide:
                         if offset.y < 0, old.y > 0 , !scroll.isTracking {
-                            self?.startAnimate(velocity: 4000)
+                            self?.startAnimate(isUp: false)
                         }
                     case .percent(_):
                         if offset.y != 1 {
@@ -199,11 +199,11 @@ public class MMParallaxView: UIView {
     
  
     public func showTopView() {
-        self.startAnimate(velocity: 4000)
+        self.startAnimate(isUp: false)
     }
     
     public func hideTopView() {
-        self.startAnimate(velocity: -4000)
+        self.startAnimate(isUp: true)
     }
     
     public func set(topView: UIView, bottomView: UIView, topHeight: TopHeightType) {
@@ -239,9 +239,7 @@ public class MMParallaxView: UIView {
         scrollView.panGestureRecognizer.isEnabled = false
     }
     
-    fileprivate func startAnimate(velocity: CGFloat) {
-        let isUp = velocity < 0
-
+    fileprivate func startAnimate(isUp: Bool) {
         if display != nil {
             return
         }
@@ -341,10 +339,10 @@ extension MMParallaxView {
                     return
                 }
             case .percent(_):
-                self.startAnimate(velocity: vel.y)
+                self.startAnimate(isUp: vel.y < 0)
             case .show:
                 if vel.y <= 0 {
-                    self.startAnimate(velocity: vel.y)
+                    self.startAnimate(isUp: vel.y < 0)
                 }
             }
             self.prePoint = .zero
