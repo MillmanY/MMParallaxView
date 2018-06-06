@@ -19,7 +19,7 @@ class SecondViewController: MMParallaxViewController {
         parallaxView.pauseLocation = 0.5
         parallaxView.parallaxTopShiftRate = 1.0
         parallaxView.topMargin = 100
-        parallaxView.heightType = .percentHeight(value: 0.8)
+        parallaxView.heightType = .percentHeight(value: 0.7)
         parallaxView.shiftStatus = { [weak self] (status) in
             switch status {
             case .hide:

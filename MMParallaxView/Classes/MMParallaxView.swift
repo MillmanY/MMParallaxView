@@ -63,7 +63,7 @@ public class MMParallaxView: UIView {
         }
     }
     public var parallaxTopShiftRate: CGFloat = 2.0
-    private var display: Timer?
+    fileprivate var displayTimer: Timer?
     private(set) var height: CGFloat = 300
     fileprivate var baseGesture: UIPanGestureRecognizer?
     fileprivate var bottomOffsetObserver: NSKeyValueObservation?
@@ -104,7 +104,7 @@ public class MMParallaxView: UIView {
             
             if oldValue != bot {
                 bottomObserver = bot.observe(\.contentOffset, options: [.new, .old]) { [weak self] (scroll, value) in
-                    guard let status = self?.status, let offset = value.newValue, let old = value.oldValue, self?.display == nil else {
+                    guard let status = self?.status, let offset = value.newValue, let old = value.oldValue, self?.displayTimer == nil else {
                         return
                     }
                  
@@ -114,7 +114,7 @@ public class MMParallaxView: UIView {
                             self?.startAnimate(isUp: false)
                         }
                     case .percent(_):
-                        if offset.y != 1, self?.display == nil {
+                        if offset.y != 1, self?.displayTimer == nil {
                             bot.contentOffset.y = 1
                         }
                     default : break
@@ -177,18 +177,18 @@ public class MMParallaxView: UIView {
             switch Int(new.y) {
             case ...0:
                 self?.parallaxTopView?.frame = CGRect(x: 0, y: 0, width: width, height: height)
-                if self?.display == nil {
+                if self?.displayTimer == nil {
                     self?.status = .show
                 }
             case Int(convert)...:
                 self?.parallaxTopView?.frame = CGRect(x: 0, y: convert/shiftRate, width: width, height: height)
-                if self?.display == nil {
+                if self?.displayTimer == nil {
                     self?.status = .hide
                 }
             case 0..<Int(convert):
                 let percent = new.y/convert
                 self?.parallaxTopView?.frame = CGRect.init(x: 0, y: new.y/shiftRate, width: width, height: height)
-                if self?.display == nil {
+                if self?.displayTimer == nil {
                     self?.status = .percent(value: percent)
                 }
             default:
@@ -237,22 +237,24 @@ public class MMParallaxView: UIView {
         bottomBaseView.subviews.forEach { $0.frame = bottomBaseView.bounds }
         maskTopView.frame = topView?.frame ?? .zero
         scrollView.bringSubview(toFront: maskTopView)
-        scrollView.panGestureRecognizer.isEnabled = false
+        scrollView.isScrollEnabled = false
     }
     
     fileprivate func startAnimate(isUp: Bool) {
-        if display != nil {
+        if displayTimer != nil {
             return
         }
         
-        display = Timer(timeInterval: 0.01, repeats: true) { [weak self] (_) in
+        displayTimer = Timer(timeInterval: 0.01, repeats: true) { [weak self] (_) in
             self?.displayLoop()
         }
+        
         bottomGestureView?.decelerationRate = .leastNormalMagnitude
-        RunLoop.current.add(display!, forMode: RunLoopMode.commonModes)
+        RunLoop.current.add(displayTimer!, forMode: RunLoopMode.commonModes)
         let currentPercent = self.status.percent
         let durationPercent = isUp ? 1-currentPercent : currentPercent
-        var duration = TimeInterval(0.1/100 * (self.height * durationPercent))
+        let puase = self.pauseLocation ?? 0
+        var duration = TimeInterval(0.1/100 * (self.height * abs(durationPercent-puase)))
         if duration > 0.3 { duration = 0.3 }
         self.bottomGestureView?.isScrollEnabled = false
         if !autoScrollWhenHide {
@@ -265,7 +267,7 @@ public class MMParallaxView: UIView {
                 self.scrollView.contentOffset.y = isUp ? self.realTopHeight : 1
             }
         }, completion: { [weak self] (_) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: {
                 self?.stop()
             })
         })
@@ -274,8 +276,8 @@ public class MMParallaxView: UIView {
     fileprivate func stop() {
         self.bottomGestureView?.isScrollEnabled = true
         self.bottomGestureView = nil
-        display?.invalidate()
-        display = nil
+        displayTimer?.invalidate()
+        displayTimer = nil
     }
     
     @objc func displayLoop() {
@@ -395,6 +397,15 @@ extension MMParallaxView {
 }
 
 extension MMParallaxView: UIGestureRecognizerDelegate {
+    public override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if displayTimer == nil {
+            bottomGestureView = nil
+            return super.gestureRecognizerShouldBegin(gestureRecognizer)
+        } else {
+            return false
+        }
+    }
+    
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if let other = otherGestureRecognizer.view as? UIScrollView, other != scrollView, bottomGestureView == nil {
             bottomGestureView = other
