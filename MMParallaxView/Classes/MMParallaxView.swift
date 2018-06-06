@@ -264,8 +264,10 @@ public class MMParallaxView: UIView {
             } else {
                 self.scrollView.contentOffset.y = isUp ? self.realTopHeight : 1
             }
-        }, completion: { (_) in
-            self.stop()
+        }, completion: { [weak self] (_) in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1, execute: {
+                self?.stop()
+            })
         })
     }
     
