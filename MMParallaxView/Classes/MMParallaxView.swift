@@ -248,13 +248,11 @@ public class MMParallaxView: UIView {
         displayTimer = Timer(timeInterval: 0.01, repeats: true) { [weak self] (_) in
             self?.displayLoop()
         }
-        
         bottomGestureView?.decelerationRate = .leastNormalMagnitude
         RunLoop.current.add(displayTimer!, forMode: RunLoopMode.commonModes)
         let currentPercent = self.status.percent
         let durationPercent = isUp ? 1-currentPercent : currentPercent
-        let puase = self.pauseLocation ?? 0
-        var duration = TimeInterval(0.1/100 * (self.height * abs(durationPercent-puase)))
+        var duration = TimeInterval(0.1/130 * (self.height * durationPercent))
         if duration > 0.3 { duration = 0.3 }
         self.bottomGestureView?.isScrollEnabled = false
         if !autoScrollWhenHide {
