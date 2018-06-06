@@ -32,6 +32,7 @@ class SimpleViewController: UIViewController {
         tableView.register(UINib.init(nibName: "ImageCell", bundle: nil), forCellReuseIdentifier: "ImageCell")
         tableView.register(UINib.init(nibName: "TitleCell", bundle: nil), forCellReuseIdentifier: "TitleCell")
         parallaxView.heightType = .height(value: 300)
+        parallaxView.autoScrollWhenHide = true
         parallaxView.shiftStatus = { [weak self] (status) in
             switch status {
             case .hide:

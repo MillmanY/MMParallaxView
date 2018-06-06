@@ -31,6 +31,7 @@ public class MMParallaxView: UIView {
             bottomBaseView.addSubview(bot)
         }
     }
+    public var autoScrollWhenHide = false
     public var maskAlpha: CGFloat = 0.0 {
         didSet {
             self.maskTopView.alpha = maskAlpha
@@ -113,7 +114,7 @@ public class MMParallaxView: UIView {
                             self?.startAnimate(isUp: false)
                         }
                     case .percent(_):
-                        if offset.y != 1 {
+                        if offset.y != 1, self?.display == nil {
                             bot.contentOffset.y = 1
                         }
                     default : break
@@ -254,13 +255,17 @@ public class MMParallaxView: UIView {
         var duration = TimeInterval(0.1/100 * (self.height * durationPercent))
         if duration > 0.3 { duration = 0.3 }
         self.bottomGestureView?.isScrollEnabled = false
-        bottomGestureView?.setContentOffset(.zero, animated: false)
+        if !autoScrollWhenHide {
+            bottomGestureView?.setContentOffset(.zero, animated: false)
+        }
         UIView.animate(withDuration: duration, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
             if let pause = self.pauseLocation, isUp && currentPercent < pause || !isUp && currentPercent > pause {
                 self.scrollView.contentOffset.y = self.realTopHeight * pause
             } else {
                 self.scrollView.contentOffset.y = isUp ? self.realTopHeight : 1
             }
+        }, completion: { (_) in
+            self.stop()
         })
     }
     
@@ -279,30 +284,15 @@ public class MMParallaxView: UIView {
         switch Int(y) {
         case ...0:
             self.status = .show
-            self.stop()
         case Int(convert)...:
             self.status = .hide
-            if let b = self.bottomGestureView?.isTracking {
-                if !b { self.stop() }
-            } else {
-                self.stop()
-            }
         case 0..<Int(convert):
             let percent = (y/convert).decimalCount(count: 3)
             if percent >= 0.99 {
-                if let b = self.bottomGestureView?.isTracking {
-                    if !b { self.stop() }
-                } else {
-                    self.stop()
-                }
                 self.status = .hide
             } else if percent <= 0.01 {
-                self.stop()
                 self.status = .show
             } else {
-                if percent == pauseLocation {
-                    self.stop()
-                }
                 self.status = .percent(value: percent)
             }
         default:
