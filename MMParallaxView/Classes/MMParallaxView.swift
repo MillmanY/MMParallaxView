@@ -262,7 +262,7 @@ public class MMParallaxView: UIView {
             if let pause = self.pauseLocation, isUp && currentPercent < pause || !isUp && currentPercent > pause {
                 self.scrollView.contentOffset.y = self.realTopHeight * pause
             } else {
-                self.scrollView.contentOffset.y = isUp ? self.realTopHeight : 1
+                self.scrollView.contentOffset.y = isUp ? self.realTopHeight : 0
             }
         }, completion: { [weak self] (_) in
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.05, execute: {
