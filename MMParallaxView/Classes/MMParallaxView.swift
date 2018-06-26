@@ -168,6 +168,7 @@ public class MMParallaxView: UIView {
         baseGesture?.delegate = self
         bottomBaseView.addGestureRecognizer(baseGesture!)
         scrollView.bounces = false
+        scrollView.backgroundColor = UIColor.clear
         self.addSubview(scrollView)
         scrollView.addSubview(bottomBaseView)
         offsetObserver = scrollView.observe(\.contentOffset, options: [.new, .old]) { [weak self] (scroll, value) in
