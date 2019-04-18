@@ -5,7 +5,7 @@
 //  Created by Millman YANG on 2018/6/5.
 //
 
-import Foundation
+import UIKit
 public extension CGFloat {
     func decimalCount(count : Int) -> CGFloat {
         let format = String(format: "%%.%if", count)

@@ -20,13 +20,13 @@ open class MMParallaxViewController: UIViewController {
         switch segue {
         case _ as MMParallaxTopSegue:
             parallaxView.parallaxTopView = segue.destination.view
-            self.addChildViewController(segue.destination)
-            segue.destination.didMove(toParentViewController: self)
+            self.addChild(segue.destination)
+            segue.destination.didMove(toParent: self)
         case _ as MMParallaxBottomSegue:
             segue.destination.definesPresentationContext = true
-            self.addChildViewController(segue.destination)
+            self.addChild(segue.destination)
             parallaxView.parallaxBottomView = segue.destination.view
-            segue.destination.didMove(toParentViewController: self)
+            segue.destination.didMove(toParent: self)
         default:
             break
         }

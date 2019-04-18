@@ -227,7 +227,7 @@ public class MMParallaxView: UIView {
             self.height = self.bounds.height*value
         }
         if let top = topView {
-            self.scrollView.sendSubview(toBack: top)
+            self.scrollView.sendSubviewToBack(top)
         }
         
         scrollView.contentSize = CGSize(width: self.bounds.width, height: self.bounds.height+height+parallaxBottomOffsetTop)
@@ -237,7 +237,7 @@ public class MMParallaxView: UIView {
         bottomBaseView.frame = CGRect(x: 0, y: height+parallaxBottomOffsetTop, width: self.frame.width, height: self.frame.height-topMargin)
         bottomBaseView.subviews.forEach { $0.frame = bottomBaseView.bounds }
         maskTopView.frame = topView?.frame ?? .zero
-        scrollView.bringSubview(toFront: maskTopView)
+        scrollView.bringSubviewToFront(maskTopView)
         scrollView.isScrollEnabled = false
     }
     
@@ -249,8 +249,8 @@ public class MMParallaxView: UIView {
         displayTimer = Timer(timeInterval: 0.01, repeats: true) { [weak self] (_) in
             self?.displayLoop()
         }
-        bottomGestureView?.decelerationRate = .leastNormalMagnitude
-        RunLoop.current.add(displayTimer!, forMode: RunLoopMode.commonModes)
+        bottomGestureView?.decelerationRate = UIScrollView.DecelerationRate.init(rawValue: CGFloat.leastNormalMagnitude)
+        RunLoop.current.add(displayTimer!, forMode: RunLoop.Mode.common)
         let currentPercent = self.status.percent
         let durationPercent = isUp ? 1-currentPercent : currentPercent
         var duration = TimeInterval(0.1/130 * (self.height * durationPercent))
@@ -259,7 +259,7 @@ public class MMParallaxView: UIView {
         if !autoScrollWhenHide {
             bottomGestureView?.setContentOffset(.zero, animated: false)
         }
-        UIView.animate(withDuration: duration, delay: 0.0, options: UIViewAnimationOptions.curveEaseOut, animations: {
+        UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
             if let pause = self.pauseLocation, isUp && currentPercent < pause || !isUp && currentPercent > pause {
                 self.scrollView.contentOffset.y = self.realTopHeight * pause
             } else {
@@ -409,7 +409,7 @@ extension MMParallaxView: UIGestureRecognizerDelegate {
         if let other = otherGestureRecognizer.view as? UIScrollView, other != scrollView, bottomGestureView == nil {
             bottomGestureView = other
             bottomGestureView?.panGestureRecognizer.addTarget(self, action: #selector(pan(gesture:)))
-            bottomGestureView?.decelerationRate = UIScrollViewDecelerationRateNormal
+            bottomGestureView?.decelerationRate = UIScrollView.DecelerationRate.normal
 
         }
         return true
