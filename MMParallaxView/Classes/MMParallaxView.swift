@@ -43,7 +43,11 @@ public class MMParallaxView: UIView {
             self.layoutIfNeeded()
         }
     }
-    public var shiftStatus: ((ShiftStatus)->Void)?
+    public var shiftStatus: ((ShiftStatus)->Void)? {
+        didSet {
+            self.shiftStatus?(status)
+        }
+    }
     public var heightType: TopHeightType = .height(value: 300) {
         didSet {
             switch heightType {

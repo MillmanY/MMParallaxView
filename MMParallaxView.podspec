@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MMParallaxView'
-  s.version          = '5.0.0'
+  s.version          = '5.0.1'
   s.summary          = 'Parallax effect when scrolling'
 
 # This description is used to generate tags and improve search results.
