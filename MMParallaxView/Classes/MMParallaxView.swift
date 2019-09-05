@@ -55,9 +55,11 @@ public class MMParallaxView: UIView {
                 self.height = value
             case .percentHeight(let value):
                 self.height = self.frame.height*value
+            case .dependOnIntrinsicContent:
+                self.height = self.topView?.intrinsicContentSize.height ?? .zero
             }
             self.superview?.layoutIfNeeded()
-            self.resetFrame()
+            self.reload()
         }
     }
     public var parallaxBottomOffsetTop: CGFloat = 0.0 {
@@ -218,18 +220,22 @@ public class MMParallaxView: UIView {
         self.parallaxBottomView = bottomView
     }
     
+ 
     override public func layoutSubviews() {
         super.layoutSubviews()
-        self.resetFrame()
+        self.reload()
     }
     
-    fileprivate func resetFrame() {
+    public func reload() {
         switch heightType {
         case .height(let value):
             self.height = value
         case .percentHeight(let value):
             self.height = self.bounds.height*value
+        case .dependOnIntrinsicContent:
+            self.height = self.topView?.intrinsicContentSize.height ?? .zero
         }
+        
         if let top = topView {
             self.scrollView.sendSubviewToBack(top)
         }

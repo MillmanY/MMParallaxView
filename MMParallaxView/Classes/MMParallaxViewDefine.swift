@@ -10,6 +10,7 @@ public extension MMParallaxView {
      enum TopHeightType {
         case height(value: CGFloat)
         case percentHeight(value: CGFloat)
+        case dependOnIntrinsicContent
     }
     
     enum ShiftStatus: Equatable {
