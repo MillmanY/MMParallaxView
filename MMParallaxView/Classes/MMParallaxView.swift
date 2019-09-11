@@ -427,3 +427,4 @@ extension MMParallaxView: UIGestureRecognizerDelegate {
 }
 
 // Offset return 0
+
