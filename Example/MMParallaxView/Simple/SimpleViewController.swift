@@ -28,7 +28,7 @@ class SimpleViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.title = "Demo1"
-
+        tableView.contentInset = UIEdgeInsets.init(top: 100, left: 0, bottom: 0, right: 0)
         tableView.register(UINib.init(nibName: "ImageCell", bundle: nil), forCellReuseIdentifier: "ImageCell")
         tableView.register(UINib.init(nibName: "TitleCell", bundle: nil), forCellReuseIdentifier: "TitleCell")
         parallaxView.heightType = .dependOnIntrinsicContent

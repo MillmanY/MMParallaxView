@@ -120,8 +120,10 @@ public class MMParallaxView: UIView {
                             self?.startAnimate(isUp: false)
                         }
                     case .percent(_):
-                        if offset.y != 1, self?.displayTimer == nil {
-                            bot.contentOffset.y = 1
+                        let edgeTop = bot.contentInset.top ?? 0.0
+
+                        if offset.y != -edgeTop, self?.displayTimer == nil {
+                            bot.contentOffset.y = -edgeTop
                         }
                     default : break
                     }
@@ -372,7 +374,8 @@ extension MMParallaxView {
                 self.scrollView.contentOffset.y = topHeight
                 return
             }
-            if isUp, position < topHeight, scroll.contentOffset.y >= 0 || scroll.contentSize.height == 0 {
+            let edgeTop = bottomGestureView?.contentInset.top ?? 0.0
+            if isUp, position < topHeight, scroll.contentOffset.y+edgeTop >= 0 || scroll.contentSize.height == 0 {
                 self.scrollView.contentOffset.y = position
             } else if !isUp, position >= 0, (scroll.contentOffset.y <= 10 || !scroll.isTracking)  {
                 self.scrollView.contentOffset.y = position
