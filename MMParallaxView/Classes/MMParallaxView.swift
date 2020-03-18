@@ -267,8 +267,9 @@ public class MMParallaxView: UIView {
         var duration = TimeInterval(0.1/130 * (self.height * durationPercent))
         if duration > 0.3 { duration = 0.3 }
         self.bottomGestureView?.isScrollEnabled = false
-        if !autoScrollWhenHide {
-            bottomGestureView?.setContentOffset(.zero, animated: false)
+        if !autoScrollWhenHide, let b = bottomGestureView {
+            let point = CGPoint.init(x: 0, y: -b.contentInset.top)
+            b.setContentOffset(point, animated: false)
         }
         UIView.animate(withDuration: duration, delay: 0.0, options: UIView.AnimationOptions.curveEaseOut, animations: {
             if let pause = self.pauseLocation, isUp && currentPercent < pause || !isUp && currentPercent > pause {
