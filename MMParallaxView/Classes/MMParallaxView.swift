@@ -120,8 +120,7 @@ public class MMParallaxView: UIView {
                             self?.startAnimate(isUp: false)
                         }
                     case .percent(_):
-                        let edgeTop = bot.contentInset.top ?? 0.0
-
+                        let edgeTop = bot.contentInset.top
                         if offset.y != -edgeTop, self?.displayTimer == nil {
                             bot.contentOffset.y = -edgeTop
                         }
