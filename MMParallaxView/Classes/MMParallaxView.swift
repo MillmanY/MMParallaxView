@@ -45,9 +45,14 @@ public class MMParallaxView: UIView {
     }
     public var shiftStatus: ((ShiftStatus)->Void)? {
         didSet {
-            self.shiftStatus?(status)
+            self.queryShiftStatus()
         }
     }
+    
+    public func queryShiftStatus() {
+        self.shiftStatus?(status)
+    }
+    
     public var heightType: TopHeightType = .height(value: 300) {
         didSet {
             switch heightType {
